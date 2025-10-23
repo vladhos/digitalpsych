@@ -104,3 +104,21 @@ def interpret_gdt(raw_total: int, answers: Dict[str, int]) -> str:
         "Výsledok je v strednom pásme. Odporúčame venovať pozornosť návykom "
         "a v prípade pretrvávania ťažkostí konzultovať s odborníkom."
     )
+
+# Domovská stránka – výber/auto-vygenerovanie kódu klienta
+from uuid import uuid4
+def _new_code() -> str:
+    return f"CL-{str(uuid4())[:6].upper()}"
+
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request, client: str | None = None):
+    code = client or _new_code()
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "client": code, "title": "DigitalPsych – Demo"},
+    )
+
+# Voliteľné: /gdt/demo -> presmerovanie rovno na štart s demo kódom
+@app.get("/gdt/demo")
+def gdt_demo():
+    return RedirectResponse(url=f"/gdt/start?client=DEMO-{_new_code()}", status_code=302)
