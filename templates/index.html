@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>DigitalPsych – Demo</h2>
+<p>Spusti ukážkový test GDT (Gaming Disorder Test).</p>
+
+<form action="/gdt/start" method="get" style="margin:1rem 0;">
+  <label for="client">Kód klienta:</label>
+  <input id="client" name="client" value="{{ client }}" required
+         style="padding:.4rem; margin:0 .5rem;"/>
+  <button type="submit">Začať test</button>
+</form>
+
+<p>Rýchla možnosť: <a href="/gdt/demo">Spustiť demo teraz</a></p>
+{% endblock %}
