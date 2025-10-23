@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>GDT – Výsledok</h2>
+<p><strong>Kód klienta:</strong> {{ rec.client_code }}</p>
+<p><strong>Surové skóre (0–16):</strong> {{ rec.raw_total }}</p>
+
+
+<h3>Interpretácia</h3>
+<p>{{ interp }}</p>
+
+
+<h3>Detaily odpovedí</h3>
+<ul>
+{% for k, v in rec.answers.items() %}
+<li>{{ k }}: {{ v }}</li>
+{% endfor %}
+</ul>
+
+
+<a href="/gdt/start?client={{ rec.client_code }}">Vyplniť znova</a>
+{% endblock %}

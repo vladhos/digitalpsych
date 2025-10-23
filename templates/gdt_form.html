@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>GDT – Gaming Disorder Test (SK)</h2>
+<p>Za posledných 12 mesiacov – označte, ako často sa vyskytli tieto situácie.</p>
+<form action="/gdt/submit" method="post">
+  <input type="hidden" name="client" value="{{ client }}" />
+
+  {% for code, text in items %}
+    <fieldset class="item">
+      <legend>{{ loop.index }}. {{ text }}</legend>
+      <div class="options">
+        {% for idx, label in scale %}
+          <label>
+            <input type="radio" name="{{ code }}" value="{{ idx }}" required />
+            {{ label }}
+          </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+  {% endfor %}
+
+  <button type="submit">Uložiť a zobraziť výsledok</button>
+</form>
+{% endblock %}
