@@ -1,8 +1,0 @@
-items:
-  - { id: "Q1", text: "Cítili ste sa nervózny/-a, úzkostný/-á alebo napätý/-á?" }
-  - { id: "Q2", text: "Nedokázali ste zastaviť alebo kontrolovať znepokojovanie sa?" }
-  - { id: "Q3", text: "Príliš ste sa obávali rôznych vecí?" }
-  - { id: "Q4", text: "Mali ste ťažkosti relaxovať?" }
-  - { id: "Q5", text: "Boli ste natoľko nepokojný/-á, že bolo ťažké obsedieť?" }
-  - { id: "Q6", text: "Ľahko ste sa rozčuľovali alebo boli podráždený/-á?" }
-  - { id: "Q7", text: "Báli ste sa, že sa stane niečo strašné?" }
