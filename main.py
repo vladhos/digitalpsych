@@ -1,4 +1,3 @@
-# main.py
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -6,10 +5,15 @@ from fastapi.templating import Jinja2Templates
 from typing import Dict, List, Tuple
 from db import init_db, get_session
 from models import ResponseGDT
+from api_assessments import router as assessments_router
 
+# --- Inicializácia aplikácie ---
 app = FastAPI(title="DigitalPsych – MVP GDT")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+# --- Pripojenie routera pre PHQ-9, GAD-7 atď. ---
+app.include_router(assessments_router)
 
 
 @app.on_event("startup")
@@ -104,21 +108,3 @@ def interpret_gdt(raw_total: int, answers: Dict[str, int]) -> str:
         "Výsledok je v strednom pásme. Odporúčame venovať pozornosť návykom "
         "a v prípade pretrvávania ťažkostí konzultovať s odborníkom."
     )
-
-# Domovská stránka – výber/auto-vygenerovanie kódu klienta
-from uuid import uuid4
-def _new_code() -> str:
-    return f"CL-{str(uuid4())[:6].upper()}"
-
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request, client: str | None = None):
-    code = client or _new_code()
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "client": code, "title": "DigitalPsych – Demo"},
-    )
-
-# Voliteľné: /gdt/demo -> presmerovanie rovno na štart s demo kódom
-@app.get("/gdt/demo")
-def gdt_demo():
-    return RedirectResponse(url=f"/gdt/start?client=DEMO-{_new_code()}", status_code=302)

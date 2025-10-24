@@ -1,0 +1,10 @@
+items:
+  - { id: "Q1", text: "Mal/-a ste malý záujem alebo potešenie z robenia vecí?" }
+  - { id: "Q2", text: "Cítili ste sa skľúčený/-á, depresívny/-a alebo beznádejný/-á?" }
+  - { id: "Q3", text: "Ťažkosti so zaspávaním, udržiavaním spánku alebo nadmerným spánkom?" }
+  - { id: "Q4", text: "Cítili ste sa unavený/-á alebo s nízkou energiou?" }
+  - { id: "Q5", text: "Znížená chuť do jedla alebo prejedanie sa?" }
+  - { id: "Q6", text: "Cítili ste sa o sebe zle – že ste zlyhal/-a alebo sklamali seba alebo rodinu?" }
+  - { id: "Q7", text: "Ťažkosti sústrediť sa na veci (napr. čítanie článku alebo sledovanie TV)?" }
+  - { id: "Q8", text: "Pohybovali ste sa alebo hovorili tak pomaly, že si to druhí všimli? Alebo naopak, boli ste nepokojný/-á viac než zvyčajne?" }
+  - { id: "Q9", text: "Myšlienky, že by vám bolo lepšie mŕtvemu/ej, alebo že by ste si ublížili?" }

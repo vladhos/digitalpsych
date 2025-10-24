@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>🧠 DigitalPsych – Dotazníky</h1>
+<p class="muted">Výsledky sú orientačné a nenahrádzajú odbornú diagnostiku.</p>
+
+<div class="card">
+  <label for="sel">Zvoľte dotazník:</label>
+  <select id="sel"></select>
+</div>
+
+<div class="card" id="form"></div>
+<div class="card result" id="out" style="display:none"></div>
+
+<script>
+async function fetchList(){
+  const r = await fetch('/assessments/list');
+  return await r.json();
+}
+async function fetchSchema(id){
+  const r = await fetch(`/assessments/${id}/schema`);
+  return await r.json();
+}
+function el(tag, attrs={}, ...children){
+  const n = document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v])=>{ if(k==='class') n.className=v; else n.setAttribute(k,v); });
+  children.forEach(c=> n.appendChild(typeof c==='string'? document.createTextNode(c): c));
+  return n;
+}
+function render(schema){
+  const root = document.getElementById('form');
+  root.innerHTML='';
+  root.appendChild(el('h2', {}, schema.title));
+  root.appendChild(el('p', {class:'muted'}, schema.recall));
+  schema.items.forEach((it, idx)=>{
+    const row = el('div', {class:'row'});
+    row.appendChild(el('label', {}, `${idx+1}. ${it.text}`));
+    const scale = el('div', {class:'scale'});
+    schema.scale.forEach(opt=>{
+      const w = el('label');
+      const r = el('input', {type:'radio', name: it.id, value: opt});
+      w.appendChild(r); w.appendChild(document.createTextNode(' '+opt));
+      scale.appendChild(w);
+    });
+    row.appendChild(scale);
+    root.appendChild(row);
+  });
+  if(schema.impairment_scale && schema.impairment_scale.length){
+    const imp = el('div', {class:'row'});
+    imp.appendChild(el('strong', {}, 'Aký vplyv mali tieto problémy na prácu/domácnosť/vzťahy?'));
+    const scale = el('div', {class:'scale'});
+    schema.impairment_scale.forEach(opt=>{
+      const w = el('label');
+      const r = el('input', {type:'radio', name: schema.id+'_imp', value: opt});
+      w.appendChild(r); w.appendChild(document.createTextNode(' '+opt));
+      scale.appendChild(w);
+    });
+    imp.appendChild(scale);
+    root.appendChild(imp);
+  }
+  const btn = el('button', {}, 'Vyhodnotiť');
+  btn.addEventListener('click', ()=> submit(schema.id));
+  root.appendChild(btn);
+}
+function collect(schema){
+  const answers=[];
+  for(const it of schema.items){
+    const sel = document.querySelector(`input[name="${it.id}"]:checked`);
+    if(!sel) return null;
+    answers.push({ item_id: it.id, label: sel.value });
+  }
+  const impSel = document.querySelector(`input[name="${schema.id}_imp"]:checked`);
+  return { answers, impairment: impSel? impSel.value : null };
+}
+async function submit(id){
+  const schema = window._schema;
+  const collected = collect(schema);
+  if(!collected){ alert('Prosím, vyplňte všetky položky.'); return; }
+  const r = await fetch(`/assessments/${id}/score`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(collected) });
+  const data = await r.json();
+  const out = document.getElementById('out');
+  out.style.display='block';
+  out.innerHTML = `
+    <h3>Výsledok – ${data.assessment.toUpperCase()}</h3>
+    <p><strong>Skóre:</strong> ${data.total} / ${data.max_score}</p>
+    <p><strong>Závažnosť:</strong> ${data.severity}</p>
+    <p><strong>Odporúčanie:</strong> ${data.advice}</p>
+    ${data.impairment? `<p><strong>Funkčný dopad:</strong> ${data.impairment}</p>`: ''}
+    ${data.safety_flag? data.safety_msgs.map(m=>`<p class='danger'>${m}</p>`).join(''): ''}
+  `;
+}
+(async function init(){
+  const sel = document.getElementById('sel');
+  const list = await fetchList();
+  list.forEach(x=>{
+    const opt = document.createElement('option');
+    opt.value = x.id; opt.textContent = `${x.name} (v${x.version})`;
+    sel.appendChild(opt);
+  });
+  async function load(id){
+    const s = await fetchSchema(id);
+    s.id = id;
+    window._schema = s;
+    render(s);
+  }
+  sel.addEventListener('change', e=> load(e.target.value));
+  if(list.length){ load(list[0].id); }
+})();
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+  .muted{ color:#6b7280; }
+  .card{ border:1px solid #e5e7eb; border-radius:12px; padding:16px 20px; margin-bottom:16px; }
+  .row{ display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
+  .scale{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  button{ padding:10px 14px; border-radius:10px; border:1px solid #1f2937; background:#111827; color:#fff; cursor:pointer; }
+  .result{ background:#f9fafb; }
+  .danger{ color:#b91c1c; font-weight:600; }
+  @media (max-width:680px){ .scale{ grid-template-columns:1fr; } }
+</style>
+{% endblock %}
