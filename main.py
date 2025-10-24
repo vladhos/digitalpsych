@@ -20,6 +20,10 @@ app.include_router(assessments_router)
 def on_startup():
     init_db()
 
+# Domovská stránka
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 # 1) Formulár
 @app.get("/gdt/start", response_class=HTMLResponse)
