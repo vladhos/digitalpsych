@@ -1,35 +1,40 @@
 id: gdt
-name: General Distress Test
+name: Gaming Disorder Test (GDT)
 version: "1.0"
 lang: sk
 
-recall: "Za posledných 7 dní zvoľte, ako často sa vás týkali nasledujúce tvrdenia."
+# Inštrukcia presne podľa dotazníka
+recall: "Nižšie uvedené otázky sa týkajú vašej hernej aktivity za posledných 12 mesiacov. Prosím, uveďte, ako často sa v priemere vyskytli nasledujúce situácie."
 
 scale:
-  labels: ["nikdy", "zriedka", "niekedy", "často"]
-  scores: [0, 1, 2, 3]
+  labels: ["nikdy", "zriedkavo", "niekedy", "často", "veľmi často"]
+  scores: [0, 1, 2, 3, 4]
+  # Heuristické pásma pre UI (ak chceš, neskôr upravíme podľa validovaných prahov)
   bands:
-    - { label: "nízka záťaž",   min: 0,  max: 5 }
-    - { label: "mierna záťaž",  min: 6,  max: 11 }
-    - { label: "vysoká záťaž",  min: 12, max: 18 }
+    - { label: "nízka miera symptómov",    min: 0,  max: 5 }
+    - { label: "stredná miera symptómov",  min: 6,  max: 11 }
+    - { label: "zvýšená miera symptómov",  min: 12, max: 16 }
 
-impairment_scale: ["vôbec nie", "trochu", "dosť", "veľmi"]
-max_score: 18
+# GDT nemá povinný funkčný dopad – vypneme ho (nebude sa zobrazovať)
+impairment_scale: []
 
+# 4 položky × max 4 body = 16
+max_score: 16
+
+# Loader vyžaduje cutoffs s kľúčom 'range'. Tieto sú informatívne a môžeš ich časom doladiť.
 cutoffs:
   - range: [0, 5]
     level: "nízka"
-    advice: "Priebežné sledovanie, psychohygiena."
-
+    advice: "Priebežné sledovanie návykov."
   - range: [6, 11]
-    level: "mierna"
-    advice: "Zvážte krátku konzultáciu a úpravu návykov."
-
-  - range: [12, 18]
-    level: "vysoká"
-    advice: "Odporúčaná konzultácia s psychológom."
+    level: "stredná"
+    advice: "Zváž rozhovor o herných návykoch a vyváženosti aktivít."
+  - range: [12, 16]
+    level: "zvýšená"
+    advice: "Odporúčaná konzultácia s odborníkom."
 
 safety_rules: []
+
 render:
   start_template: "gdt_form.html"
   result_template: "gdt_result.html"

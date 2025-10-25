@@ -1,7 +1,5 @@
 items:
-  - { id: "gdt_1", text: "Cítil/a som sa napätý/á alebo nervózny/á." }
-  - { id: "gdt_2", text: "Mal/a som ťažkosti so spánkom." }
-  - { id: "gdt_3", text: "Cítil/a som sa smutný/á alebo vyčerpaný/á." }
-  - { id: "gdt_4", text: "Myšlienky mi často odbiehali k problémom." }
-  - { id: "gdt_5", text: "Mal/a som problém sústrediť sa." }
-  - { id: "gdt_6", text: "Bol/a som podráždený/á." }
+  - { id: "gdt_1", text: "Mal/a som problém s kontrolovaním (obmedzovaním, regulovaním) svojho hrania." }
+  - { id: "gdt_2", text: "Uprednostňoval/a som hranie pred inými záujmami a dennými aktivitami." }
+  - { id: "gdt_3", text: "Pokračoval/a som v hraní aj napriek jeho negatívnym dôsledkom." }
+  - { id: "gdt_4", text: "Mal/a som závažné životné problémy (napr. osobné, rodinné, sociálne, v škole, v práci, atď.), ktoré vznikli ako dôsledok môjho hrania." }
