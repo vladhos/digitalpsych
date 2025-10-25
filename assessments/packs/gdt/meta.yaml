@@ -26,9 +26,17 @@ scale:
 
 # Alternatívne/rozšírené pravidlá pre API, ktoré vracia 'severity' a 'advice'
 cutoffs:
-  - { lo: 0,  hi: 5,  level: "nízka",  advice: "Priebežné sledovanie, psychohygiena." }
-  - { lo: 6,  hi: 11, level: "mierna", advice: "Zvážte krátku konzultáciu a úpravu návykov." }
-  - { lo: 12, hi: 18, level: "vysoká", advice: "Odporúčaná konzultácia s psychológom." }
+  - range: [0, 5]
+    level: "nízka"
+    advice: "Priebežné sledovanie, psychohygiena."
+
+  - range: [6, 11]
+    level: "mierna"
+    advice: "Zvážte krátku konzultáciu a úpravu návykov."
+
+  - range: [12, 18]
+    level: "vysoká"
+    advice: "Odporúčaná konzultácia s psychológom."
 
 # Pravidlá bezpečnosti (môže ostať prázdne)
 safety_rules: []
