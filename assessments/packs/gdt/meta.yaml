@@ -3,28 +3,19 @@ name: General Distress Test
 version: "1.0"
 lang: sk
 
-# Zobrazí sa nad formulárom (čo hodnotiť, za aké obdobie)
 recall: "Za posledných 7 dní zvoľte, ako často sa vás týkali nasledujúce tvrdenia."
 
-# Globálna škála – labely a ich skóre 1:1 podľa pozície
-scale_labels: ["nikdy", "zriedka", "niekedy", "často"]
-scale_scores: [0, 1, 2, 3]
-
-# Voliteľná škála funkčného dopadu (ak ju UI/BE podporuje)
-impairment_scale: ["vôbec nie", "trochu", "dosť", "veľmi"]
-
-# Max skóre (6 položiek × maximum 3 body = 18)
-max_score: 18
-
-# Pásma závažnosti (interpretácia pre UI/BE, ktoré to vie čítať cez bands)
-# Zvoľ ilustračné prahy (uprav podľa potreby/testovania)
 scale:
+  labels: ["nikdy", "zriedka", "niekedy", "často"]
+  scores: [0, 1, 2, 3]
   bands:
     - { label: "nízka záťaž",   min: 0,  max: 5 }
     - { label: "mierna záťaž",  min: 6,  max: 11 }
     - { label: "vysoká záťaž",  min: 12, max: 18 }
 
-# Alternatívne/rozšírené pravidlá pre API, ktoré vracia 'severity' a 'advice'
+impairment_scale: ["vôbec nie", "trochu", "dosť", "veľmi"]
+max_score: 18
+
 cutoffs:
   - range: [0, 5]
     level: "nízka"
@@ -38,5 +29,7 @@ cutoffs:
     level: "vysoká"
     advice: "Odporúčaná konzultácia s psychológom."
 
-# Pravidlá bezpečnosti (môže ostať prázdne)
 safety_rules: []
+render:
+  start_template: "gdt_form.html"
+  result_template: "gdt_result.html"
