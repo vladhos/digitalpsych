@@ -75,18 +75,44 @@ async function submit(id){
   const schema = window._schema;
   const collected = collect(schema);
   if(!collected){ alert('Prosím, vyplňte všetky položky.'); return; }
-  const r = await fetch(`/assessments/${id}/score`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(collected) });
-  const data = await r.json();
+
+  let r, data, text;
+  try {
+    r = await fetch(`/assessments/${id}/score`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(collected)
+    });
+
+    // Ak API vráti chybu, skúsme ju ukázať používateľovi.
+    if(!r.ok){
+      text = await r.text();
+      throw new Error(`Server vrátil ${r.status} ${r.statusText}\n${text}`);
+    }
+    data = await r.json();
+  } catch (e){
+    const out = document.getElementById('out');
+    out.style.display='block';
+    out.innerHTML = `
+      <div class="card">
+        <h3>Chyba pri vyhodnocovaní</h3>
+        <p>Skús to prosím znova. Ak problém pretrváva, pozri server logy.</p>
+        <pre style="white-space:pre-wrap">${(e && e.message) ? e.message : 'Neznáma chyba'}</pre>
+      </div>`;
+    return;
+  }
+
   const out = document.getElementById('out');
   out.style.display='block';
   out.innerHTML = `
-    <h3>Výsledok – ${data.assessment.toUpperCase()}</h3>
+    <h3>Výsledok – ${data.assessment?.toUpperCase() ?? schema.title}</h3>
     <p><strong>Skóre:</strong> ${data.total} / ${data.max_score}</p>
-    <p><strong>Závažnosť:</strong> ${data.severity}</p>
-    <p><strong>Odporúčanie:</strong> ${data.advice}</p>
+    ${data.severity ? `<p><strong>Závažnosť:</strong> ${data.severity}</p>` : ''}
+    ${data.advice ? `<p><strong>Odporúčanie:</strong> ${data.advice}</p>` : ''}
     ${data.impairment? `<p><strong>Funkčný dopad:</strong> ${data.impairment}</p>`: ''}
-    ${data.safety_flag? data.safety_msgs.map(m=>`<p class='danger'>${m}</p>`).join(''): ''}
+    ${Array.isArray(data.safety_msgs) ? data.safety_msgs.map(m=>`<p class='danger'>${m}</p>`).join('') : ''}
   `;
+  out.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function renderList(list){
@@ -127,10 +153,28 @@ async function load(id, cardEl){
   .small{ font-size: 0.9em; }
   .card{ border:1px solid #e5e7eb; border-radius:12px; padding:16px 20px; margin-bottom:16px; }
   .card-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
-  .mini-card{ border:1px solid #e5e7eb; border-radius:12px; padding:14px; cursor:pointer; background:#0f172a; color:#e5e7eb; outline:none; }
+  .mini-card{
+  border:1px solid #1f2937;
+  border-radius:12px;
+  padding:14px;
+  cursor:pointer;
+  background:#0f172a;
+  color:#e5e7eb;
+  transition: transform .08s ease, background .12s ease, border-color .12s ease;
+  outline: none;
+  }
   .mini-card h3{ margin:0 0 6px; font-size:1.05rem; }
   .mini-card:hover{ border-color:#3b82f6; }
-  .mini-card.active{ border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25) inset; }
+  .mini-card.active{
+  border-color:#3b82f6;
+  box-shadow:0 0 0 2px rgba(59,130,246,.25) inset;
+  background:#112440;          /* aby bolo vidno, že je zvolená */
+  }
+  .mini-card:focus-visible{
+  background:#111f3a;         /* jasnejšie zvýraznenie pri prechode myšou/focuse */
+  border-color:#3b82f6;
+  transform: translateY(-1px);
+  }
   .row{ display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
   .scale{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
   button{ padding:10px 14px; border-radius:10px; border:1px solid #1f2937; background:#111827; color:#fff; cursor:pointer; }
