@@ -1,4 +1,4 @@
-key: gdt
+id: gdt
 name: General Distress Test
 lang: sk
 about: "Krátky skríning subjektívnej psychickej záťaže za posledný týždeň."
@@ -13,3 +13,4 @@ scale:
 render:
   start_template: "gdt_form.html"     # môžeš ponechať existujúcu šablónu
   result_template: "gdt_result.html"  # alebo použiť generickú, viď nižšie
+
