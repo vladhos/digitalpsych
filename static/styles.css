@@ -5,3 +5,17 @@ header h1 { margin-bottom: 1rem; }
 button { padding: .6rem 1rem; border-radius: 8px; border: 1px solid #222; background: #f7f7f7; cursor: pointer; }
 button:hover { background: #eee; }
 main { max-width: 800px; }
+:root { --ink:#1f2937; --bg:#0b1020; --card:#111827; --muted:#9ca3af; --accent:#3b82f6; }
+body { background:#0b0f14; color:#e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+.container { max-width: 980px; margin: 0 auto; padding: 16px; }
+.topbar { background: #0b0f14; border-bottom: 1px solid #111827; position: sticky; top:0; z-index:10; }
+.topbar .brand { font-weight: 700; }
+.topbar .nav a { margin-left: 16px; color: #cbd5e1; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 16px; }
+.card { background: #0f172a; border: 1px solid #111827; border-radius: 16px; padding: 16px; }
+.card h3 { margin: 0 0 8px; }
+.card p { color: #94a3b8; min-height: 48px; }
+.card a.button { display: inline-block; margin-top: 8px; padding: 10px 14px; border-radius: 12px; border: 1px solid #1f2937; text-decoration: none; color: white; }
+.card a.button:hover { border-color: #3b82f6; }
+.hero { background: linear-gradient(180deg, #0b0f14, #0f172a); border: 1px solid #111827; border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+.muted { color:#94a3b8; }

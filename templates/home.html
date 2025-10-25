@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="hero">
+    <h1>DigitalPsych</h1>
+    <p class="muted">Jednoduché a rýchle digitálne skríningy (PHQ-9, GAD-7, GDT…). Výsledok dostaneš okamžite, dáta môžeme ukladať lokálne do DB.</p>
+    <p><a class="button" href="/assessments">Prejsť na dotazníky</a></p>
+  </section>
+  {% if packs %}
+  <div class="card-grid">
+    {% for p in packs %}
+      <div class="card">
+        <h3>{{ p.name }}</h3>
+        <p>{{ p.about }}</p>
+        <a class="button" href="/assessments/{{ p.key }}/start">Spustiť</a>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endblock %}

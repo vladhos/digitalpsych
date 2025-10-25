@@ -7,14 +7,17 @@
 <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-<header>
-<h1>DigitalPsych – MVP</h1>
-</header>
-<main>
-{% block content %}{% endblock %}
-</main>
-<footer>
-<small>Výsledky majú skríningový charakter a nenahrádzajú odbornú diagnostiku.</small>
-</footer>
+  <nav class="topbar">
+    <div class="container">
+      <a class="brand" href="/">DigitalPsych</a>
+      <div class="nav">
+        <a href="/assessments">Dotazníky</a>
+        <a href="/about">O projekte</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
 </body>
 </html>

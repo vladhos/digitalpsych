@@ -1,0 +1,15 @@
+key: gdt
+name: General Distress Test
+lang: sk
+about: "Krátky skríning subjektívnej psychickej záťaže za posledný týždeň."
+scale:
+  type: sum
+  min: 0
+  max: 24
+  bands:
+    - { label: "nízka záťaž",   min: 0,  max: 7 }
+    - { label: "mierna záťaž",  min: 8,  max: 15 }
+    - { label: "vysoká záťaž",  min: 16, max: 24 }
+render:
+  start_template: "gdt_form.html"     # môžeš ponechať existujúcu šablónu
+  result_template: "gdt_result.html"  # alebo použiť generickú, viď nižšie

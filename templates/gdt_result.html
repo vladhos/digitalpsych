@@ -1,21 +1,16 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2>GDT – Výsledok</h2>
-<p><strong>Kód klienta:</strong> {{ rec.client_code }}</p>
-<p><strong>Surové skóre (0–16):</strong> {{ rec.raw_total }}</p>
-
-
-<h3>Interpretácia</h3>
-<p>{{ interp }}</p>
-
-
-<h3>Detaily odpovedí</h3>
-<ul>
-{% for k, v in rec.answers.items() %}
-<li>{{ k }}: {{ v }}</li>
-{% endfor %}
-</ul>
-
-
-<a href="/gdt/start?client={{ rec.client_code }}">Vyplniť znova</a>
+  <h1>Výsledok – {{ meta.name }}</h1>
+  <p>Skóre: <strong>{{ score }}</strong>{% if band and band.label %} ({{ band.label }}){% endif %}</p>
+  {% if meta.scale and meta.scale.bands %}
+    <div class="card">
+      <h3>Interpretácia</h3>
+      <ul>
+        {% for b in meta.scale.bands %}
+          <li>{{ b.label }}: {{ b.min }} – {{ b.max }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  <p><a class="button" href="/assessments">Späť na dotazníky</a></p>
 {% endblock %}

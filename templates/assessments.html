@@ -4,8 +4,8 @@
 <p class="muted">Výsledky sú orientačné a nenahrádzajú odbornú diagnostiku.</p>
 
 <div class="card">
-  <label for="sel">Zvoľte dotazník:</label>
-  <select id="sel"></select>
+  <h2>Vyberte dotazník</h2>
+  <div id="grid" class="card-grid"></div>
 </div>
 
 <div class="card" id="form"></div>
@@ -88,22 +88,35 @@ async function submit(id){
     ${data.safety_flag? data.safety_msgs.map(m=>`<p class='danger'>${m}</p>`).join(''): ''}
   `;
 }
-(async function init(){
-  const sel = document.getElementById('sel');
-  const list = await fetchList();
+
+function renderList(list){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
   list.forEach(x=>{
-    const opt = document.createElement('option');
-    opt.value = x.id; opt.textContent = `${x.name} (v${x.version})`;
-    sel.appendChild(opt);
+    const card = el('div', {class:'mini-card', tabindex:'0', role:'button', 'aria-label': x.name});
+    card.appendChild(el('h3', {}, x.name));
+    const meta = el('p', {class:'muted small'}, `verzia ${x.version}${x.items_count? ` • ${x.items_count} položiek`: ''}`);
+    card.appendChild(meta);
+    card.addEventListener('click', ()=> load(x.id, card));
+    card.addEventListener('keypress', (e)=>{ if(e.key==='Enter'||e.key===' ') { e.preventDefault(); card.click(); }});
+    grid.appendChild(card);
   });
-  async function load(id){
-    const s = await fetchSchema(id);
-    s.id = id;
-    window._schema = s;
-    render(s);
-  }
-  sel.addEventListener('change', e=> load(e.target.value));
-  if(list.length){ load(list[0].id); }
+  // auto-load prvú
+  if(list.length){ load(list[0].id, grid.firstChild); }
+}
+async function load(id, cardEl){
+  const s = await fetchSchema(id);
+  s.id = id;
+  window._schema = s;
+  // označ vybranú kartu
+  document.querySelectorAll('#grid .mini-card').forEach(c=> c.classList.remove('active'));
+  if(cardEl) cardEl.classList.add('active');
+  render(s);
+}
+
+(async function init(){
+  const list = await fetchList();
+  renderList(list);
 })();
 </script>
 {% endblock %}
@@ -111,12 +124,19 @@ async function submit(id){
 {% block styles %}
 <style>
   .muted{ color:#6b7280; }
+  .small{ font-size: 0.9em; }
   .card{ border:1px solid #e5e7eb; border-radius:12px; padding:16px 20px; margin-bottom:16px; }
+  .card-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
+  .mini-card{ border:1px solid #e5e7eb; border-radius:12px; padding:14px; cursor:pointer; background:#0f172a; color:#e5e7eb; outline:none; }
+  .mini-card h3{ margin:0 0 6px; font-size:1.05rem; }
+  .mini-card:hover{ border-color:#3b82f6; }
+  .mini-card.active{ border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,.25) inset; }
   .row{ display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
   .scale{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
   button{ padding:10px 14px; border-radius:10px; border:1px solid #1f2937; background:#111827; color:#fff; cursor:pointer; }
-  .result{ background:#f9fafb; }
+  .result{ background:#f9fafb; color:#111827; }
   .danger{ color:#b91c1c; font-weight:600; }
   @media (max-width:680px){ .scale{ grid-template-columns:1fr; } }
 </style>
+
 {% endblock %}

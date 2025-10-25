@@ -50,3 +50,36 @@ class Assessment:
                 if label2score.get(answers[r.item_id], 0) >= r.min_score:
                     messages.append(r.message)
         return messages
+
+
+# --- 3.1: Generické vyhodnocovanie podľa meta.yaml bands ---
+
+def compute_sum_score(answers: Dict[str, int | str], label2score: Dict[str, int] | None = None) -> int:
+    """
+    Sumuje hodnoty odpovedí.
+    - Ak je label2score zadaný, premapuje textové labely na skóre.
+    - Inak predpokladá, že answers obsahuje číselné hodnoty.
+    answers: { item_id: value_or_label }
+    """
+    total = 0
+    if label2score:
+        for v in answers.values():
+            total += int(label2score.get(str(v), 0))
+    else:
+        for v in answers.values():
+            total += int(v)
+    return total
+
+
+def band_from_score(meta: Dict[str, Any], score: int) -> Optional[Dict[str, Any]]:
+    """
+    Nájde príslušné pásmo (band) podľa skóre. Podporuje:
+    - meta["bands"] alebo
+    - meta["scale"]["bands"]
+    Band by mal mať kľúče: label, min, max.
+    """
+    bands = meta.get("bands") or meta.get("scale", {}).get("bands") or []
+    for b in bands:
+        if int(b["min"]) <= score <= int(b["max"]):
+            return b
+    return None
