@@ -164,19 +164,24 @@ async function load(id, cardEl){
   outline: none;
   }
   .mini-card h3{ margin:0 0 6px; font-size:1.05rem; }
-  .mini-card:hover{ border-color:#3b82f6; }
-  .mini-card.active{
+  .mini-card:hover,
+.mini-card:focus-visible{
+  background:#111f3a;
   border-color:#3b82f6;
   box-shadow:0 0 0 2px rgba(59,130,246,.25) inset;
-  background:#112440;          /* aby bolo vidno, že je zvolená */
-  }
-  .mini-card:focus-visible{
-  background:#111f3a;         /* jasnejšie zvýraznenie pri prechode myšou/focuse */
-  border-color:#3b82f6;
   transform: translateY(-1px);
-  }
+}
+.mini-card.active{
+  border-color:#3b82f6;
+  box-shadow:0 0 0 2px rgba(59,130,246,.35) inset;
+  background:#112440;
+}
   .row{ display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
-  .scale{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+ .scale{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap:8px;
+}
   button{ padding:10px 14px; border-radius:10px; border:1px solid #1f2937; background:#111827; color:#fff; cursor:pointer; }
   .result{ background:#f9fafb; color:#111827; }
   .danger{ color:#b91c1c; font-weight:600; }
