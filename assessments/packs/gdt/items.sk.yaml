@@ -1,48 +1,7 @@
 items:
-  - id: gdt_1
-    text: "Cítil/a som sa napätý/á alebo nervózny/á."
-    answers:
-      - { label: "nikdy", value: 0 }
-      - { label: "zriedka", value: 1 }
-      - { label: "niekedy", value: 2 }
-      - { label: "často", value: 3 }
-
-  - id: gdt_2
-    text: "Mal/a som ťažkosti so spánkom."
-    answers:
-      - { label: "nikdy", value: 0 }
-      - { label: "zriedka", value: 1 }
-      - { label: "niekedy", value: 2 }
-      - { label: "často", value: 3 }
-
-  - id: gdt_3
-    text: "Cítil/a som sa smutný/á alebo vyčerpaný/á."
-    answers:
-      - { label: "nikdy", value: 0 }
-      - { label: "zriedka", value: 1 }
-      - { label: "niekedy", value: 2 }
-      - { label: "často", value: 3 }
-
-  - id: gdt_4
-    text: "Mysleli mi na problém stále odbiehali."
-    answers:
-      - { label: "nikdy", value: 0 }
-      - { label: "zriedka", value: 1 }
-      - { label: "niekedy", value: 2 }
-      - { label: "často", value: 3 }
-
-  - id: gdt_5
-    text: "Mal/a som problém sústrediť sa."
-    answers:
-      - { label: "nikdy", value: 0 }
-      - { label: "zriedka", value: 1 }
-      - { label: "niekedy", value: 2 }
-      - { label: "často", value: 3 }
-
-  - id: gdt_6
-    text: "Bol/a som podráždený/á."
-    answers:
-      - { label: "nikdy", value: 0 }
-      - { label: "zriedka", value: 1 }
-      - { label: "niekedy", value: 2 }
-      - { label: "často", value: 3 }
+  - { id: "gdt_1", text: "Cítil/a som sa napätý/á alebo nervózny/á." }
+  - { id: "gdt_2", text: "Mal/a som ťažkosti so spánkom." }
+  - { id: "gdt_3", text: "Cítil/a som sa smutný/á alebo vyčerpaný/á." }
+  - { id: "gdt_4", text: "Myšlienky mi často odbiehali k problémom." }
+  - { id: "gdt_5", text: "Mal/a som problém sústrediť sa." }
+  - { id: "gdt_6", text: "Bol/a som podráždený/á." }
