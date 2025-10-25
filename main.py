@@ -8,11 +8,11 @@ from models import ResponseGDT
 from api_assessments import router as assessments_router
 
 # --- Inicializácia aplikácie ---
-app = FastAPI(title="DigitalPsych – MVP GDT")
+app = FastAPI(title="DigitalPsych – MVP")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# --- Pripojenie routera pre PHQ-9, GAD-7 atď. ---
+# --- Pripojenie routera pre PHQ-9, GAD-7, GDT (generic API) ---
 app.include_router(assessments_router)
 
 
@@ -23,13 +23,30 @@ def on_startup():
 # Domovská stránka
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
+    # 'index.html' nechávam tak ako ho máš
     return templates.TemplateResponse("index.html", {"request": request})
 
-# 1) Formulár
+# --- 3.2: UI route na zoznam dotazníkov (frontend volá API z assessments_router) ---
+@app.get("/assessments", response_class=HTMLResponse)
+def assessments_ui(request: Request):
+    # šablóna 'assessments.html' obsahuje JS (fetch /assessments/list atď.)
+    return templates.TemplateResponse("assessments.html", {"request": request})
+
+# --- 3.2: Presmerovanie legacy GDT štartu na nový engine/UI ---
 @app.get("/gdt/start", response_class=HTMLResponse)
-def gdt_start(request: Request, client: str = "anon"):
+def gdt_legacy_start():
+    # Kedysi sa GDT otváral cez samostatný formulár. Teraz presmerujeme na nové UI.
+    return RedirectResponse(url="/assessments", status_code=302)
+
+# -------------------------------------------------------------------
+# Pôvodné GDT routy ostávajú (môžeš odstrániť po úplnom prechode).
+# -------------------------------------------------------------------
+
+# 1) Formulár (legacy)
+@app.get("/gdt/start-legacy", response_class=HTMLResponse)
+def gdt_start_legacy(request: Request, client: str = "anon"):
     scale_labels: List[str] = ["nikdy", "zriedkavo", "niekedy", "často", "veľmi často"]
-    # pošleme do šablóny už spárované (index, label), aby šablóna nemusela používať enumerate
+    # pošleme do šablóny už spárované (index, label)
     scale: List[Tuple[int, str]] = list(enumerate(scale_labels))
     items = [
         ("GDT_1", "Mal/a som problém s kontrolovaním svojho hrania."),
@@ -44,12 +61,11 @@ def gdt_start(request: Request, client: str = "anon"):
             "client": client,
             "scale": scale,
             "items": items,
-            "title": "GDT – Gaming Disorder Test",
+            "title": "GDT – Gaming Disorder Test (legacy)",
         },
     )
 
-
-# 2) Submit
+# 2) Submit (legacy)
 @app.post("/gdt/submit")
 def gdt_submit(
     client: str = Form(...),
@@ -74,8 +90,7 @@ def gdt_submit(
 
     return RedirectResponse(url=f"/gdt/result/{rec.id}", status_code=303)
 
-
-# 3) Výsledok
+# 3) Výsledok (legacy)
 @app.get("/gdt/result/{response_id}", response_class=HTMLResponse)
 def gdt_result(request: Request, response_id: int):
     with get_session() as session:
@@ -90,12 +105,11 @@ def gdt_result(request: Request, response_id: int):
             "request": request,
             "rec": rec,
             "interp": interp,
-            "title": "GDT – Výsledok",
+            "title": "GDT – Výsledok (legacy)",
         },
     )
 
-
-# --- Pomocná interpretácia (skríning, nie diagnostika) ---
+# --- Pomocná interpretácia (legacy skríning, nie diagnostika) ---
 def interpret_gdt(raw_total: int, answers: Dict[str, int]) -> str:
     high_count = sum(1 for v in answers.values() if v >= 3)  # často/veľmi často
     if raw_total <= 4 and high_count == 0:
